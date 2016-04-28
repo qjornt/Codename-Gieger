@@ -1,14 +1,19 @@
-(define weapon%
+;class: weapon
+;superclass: item
+;this class defines all weapons.
+
+(define weapon% 
   
   (class item%
     
+    (super-new)
+    
+    ;Holds the value of the base damage a wepaon causes.
     (init-field base-damage)
     
-    (define/public (use)
-      (let ((agent (send *level* get-agent (send current-agent get-position))))
-        (unless (not agent)
-          (send agent set-health! (+ base-damage (- (random 21) 10))))))
     
-    (super-new)))
-            
-          
+    ;Use method
+    
+    ;Activates the weapon.
+    (define/public (use)
+      (void))))

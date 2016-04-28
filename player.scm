@@ -1,33 +1,40 @@
-(define player%  
+;class: player
+;superclass: agent
+;this class defines the player, the agent controlled by the user.
+
+(define player%
   
   (class agent%
     
-    (define/public (item-switch!)
-      (let ((temp (mcar inventory)))
-        (set-mcar! inventory (mcdr inventory))
-        (set-mcdr! inventory (temp))))
+    ;angle defines which direction the player will be looking towards.
+    ;inventory is the players inventory.
+    (inherit-field angle
+                   inventory)
     
+    ;Retrieves the projectile position and velocity.
+    ;Removes the main hand item.
+    (inherit get-projectile-position
+             get-projectile-velocity
+             item-remove-primary!)
+
+    ;Firarm methods
     
-    (define/public (item-throw)
-      (new projectile%
-           [name 'projectile]
-           [position position]
-           [image (send (mcar inventory) get-image)]
-           [velocity (mcons 10 10)])
-      (item-remove!))
-    
+    ;Reloads the main hand item if it's a firearm, and the player
+    ;has a magazine.
     (define/public (firearm-reload)
-      (unless (not (is-a? (mcar inventory) firearm%))
-        (send (mcar inventory) reload)))
+      (when (is-a? (mcar inventory) firearm%)
+        (send (mcar inventory) reload!)))
     
+    ;Checks the amount of ammunution left in the firearm.
     (define/public (firearm-check)
-      (unless (not (is-a? (mcar inventory) %firearm))
-        (send (mcar-inventory) check)))
+      (unless (not (is-a? (mcar inventory) firearm%))
+        (send (mcar inventory) check)))
     
+    
+    ;World interaction
+    
+    ;Manages the world interaction between player and nearby objects.
     (define/public (world-interact)
-      (void))
+      (send *level* agent-interact this))
     
     (super-new)))
-    
-    
-           
